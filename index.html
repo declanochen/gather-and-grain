@@ -604,6 +604,35 @@
     font-size:0.8rem;
     color:#C9D6C2;
   }
+
+  /* ---------- Back to top ---------- */
+  .back-to-top{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    background:var(--green);
+    color:var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 10px 22px -8px var(--shadow);
+    opacity:0;
+    transform:translateY(10px);
+    pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease, background .15s ease;
+    z-index:60;
+  }
+  .back-to-top.show{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .back-to-top:hover{background:var(--green-deep);}
+  .back-to-top:focus-visible{outline:3px solid var(--gold-soft); outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){
+    .back-to-top{transition:opacity .01ms;}
+  }
 </style>
 
 <nav class="nav">
@@ -756,6 +785,12 @@
     <p>&copy; 2026 Gather &amp; Grain. Orders are placed by request — thank you for supporting a small, local bakery.</p>
   </div>
 </footer>
+
+<button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M10 15.5V4.5M10 4.5L4.5 10M10 4.5L15.5 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
 
 <script>
 (function(){
@@ -1209,10 +1244,35 @@
     document.getElementById("pickup").min = min;
   }
 
+  function initBackToTop(){
+    var btn = document.getElementById("back-to-top");
+    var ticking = false;
+    function update(){
+      if (window.scrollY > window.innerHeight * 0.75){
+        btn.classList.add("show");
+      } else {
+        btn.classList.remove("show");
+      }
+      ticking = false;
+    }
+    window.addEventListener("scroll", function(){
+      if (!ticking){
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, {passive:true});
+    update();
+    btn.addEventListener("click", function(){
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({top:0, left:0, behavior: reduceMotion ? "auto" : "smooth"});
+    });
+  }
+
   renderFlavors();
   refreshUI();
   renderFooterContact();
   initForm();
   setMinPickupDate();
+  initBackToTop();
 })();
 </script>
