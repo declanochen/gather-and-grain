@@ -855,6 +855,11 @@
         desc:"Chopped dill pickle and a hint of garlic, for the briny-bread lovers.",
         addins:"dill pickle, garlic" }
     ]},
+    { title: "Granola", items: [
+      { id:"organic-granola", name:"Organic Granola", price:10,
+        desc:"Oats toasted low and slow with coconut oil and honey, finished with pumpkin seeds and cinnamon. Good by the handful, better on yogurt.",
+        ingredientsOverride:"organic oats, organic coconut oil, organic honey, organic pumpkin seeds, organic cinnamon, sea salt" }
+    ]},
     { title: "Custom", items: [
       { id:"custom", name:"Custom Order", priceLabel:"$10–16", isCustom:true,
         desc:"Have something in mind? Tell us what you're craving in the notes below and we'll quote you a price before baking.",
@@ -935,7 +940,9 @@
     var strong = document.createElement("strong");
     strong.textContent = "Ingredients: ";
     ingredients.appendChild(strong);
-    ingredients.appendChild(document.createTextNode(BASE_INGREDIENTS + ", " + item.addins));
+    ingredients.appendChild(document.createTextNode(
+      item.ingredientsOverride ? item.ingredientsOverride : BASE_INGREDIENTS + ", " + item.addins
+    ));
 
     var actions = document.createElement("div");
     actions.className = "card-actions";
