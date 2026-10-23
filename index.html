@@ -98,7 +98,7 @@
     margin:0;
     padding:0;
   }
-  .nav-links a{
+  .nav-links a:not(.btn){
     text-decoration:none;
     font-size:0.95rem;
     font-weight:500;
@@ -107,7 +107,7 @@
     border-bottom:2px solid transparent;
     transition:border-color .15s ease, color .15s ease;
   }
-  .nav-links a:hover{color:var(--ink); border-color:var(--gold-soft);}
+  .nav-links a:not(.btn):hover{color:var(--ink); border-color:var(--gold-soft);}
   .nav-cta{
     display:inline-flex;
     align-items:center;
@@ -678,7 +678,7 @@
     <div class="section-head">
       <span class="kicker">Ready when you are</span>
       <h2>Place your order</h2>
-      <p>Add loaves above, then fill in your details below. We'll confirm your pickup time and, for custom orders, your price.</p>
+      <p>Add loaves above, then fill in your details below. Orders take 2–3 days to prepare, so please order a few days ahead — we'll confirm your pickup time and, for custom orders, your price.</p>
     </div>
 
     <div class="order-layout">
@@ -699,7 +699,7 @@
           <div class="field" id="field-pickup">
             <label for="pickup">Preferred pickup date</label>
             <input type="date" id="pickup" name="pickup" />
-            <p class="hint">We'll confirm the exact time with you.</p>
+            <p class="hint">Please allow 2–3 days — we'll confirm the exact time with you.</p>
           </div>
 
           <div class="field" id="field-notes">
@@ -769,7 +769,7 @@
     },
     form: {
       baseUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdLq32Fpe6NKuN-q5Yy94iq8YJHdH_pJfNLWMiYZ-PqH1YL8g/viewform",
-      entries: { order: "738761063", name: "1382264089", contact: "1992905379", pickup: "533629990", notes: "1496620739" }
+      entries: { order: "738761063", total: "", name: "1382264089", contact: "1992905379", pickup: "533629990", notes: "1496620739" }
     }
   };
 
@@ -1148,8 +1148,10 @@
       return;
     }
     var params = new URLSearchParams();
+    var totalText = money(lastOrderInfo.total) + (cart["custom"] > 0 ? " (plus custom, quoted separately)" : "");
     var orderText = lastOrderInfo.lines.join("\n") + "\nEstimated total (excludes custom): " + money(lastOrderInfo.total);
     if (CONFIG.form.entries.order) params.set("entry." + CONFIG.form.entries.order, orderText);
+    if (CONFIG.form.entries.total) params.set("entry." + CONFIG.form.entries.total, totalText);
     if (CONFIG.form.entries.name) params.set("entry." + CONFIG.form.entries.name, lastData.name);
     if (CONFIG.form.entries.contact) params.set("entry." + CONFIG.form.entries.contact, lastData.contact);
     if (lastData.pickup && CONFIG.form.entries.pickup) params.set("entry." + CONFIG.form.entries.pickup, formatDate(lastData.pickup));
@@ -1200,9 +1202,17 @@
     });
   }
 
+  function setMinPickupDate(){
+    var d = new Date();
+    d.setDate(d.getDate() + 2);
+    var min = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+    document.getElementById("pickup").min = min;
+  }
+
   renderFlavors();
   refreshUI();
   renderFooterContact();
   initForm();
+  setMinPickupDate();
 })();
 </script>
