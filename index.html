@@ -819,7 +819,10 @@
     { title: "Plain", items: [
       { id:"plain", name:"Plain", price:10,
         desc:"The one that started it all. A simple, honest loaf with a crackling crust and a soft, open crumb.",
-        addins:"none — just the classic base" }
+        addins:"none — just the classic base" },
+      { id:"sandwich-bread", name:"Plain Sourdough Sandwich Bread", price:10,
+        desc:"The same organic sourdough, baked in a loaf pan instead of a boule. Softer crust, even slices, made for sandwiches and toast.",
+        addins:"none — same classic base, shaped for sandwich slices" }
     ]},
     { title: "Savory", items: [
       { id:"jalapeno-cheddar", name:"Jalapeño Cheddar", price:13,
@@ -862,6 +865,11 @@
       { id:"organic-granola", name:"Organic Granola", price:10,
         desc:"Oats toasted low and slow with coconut oil and honey, finished with pumpkin seeds and cinnamon. Good by the handful, better on yogurt.",
         ingredientsOverride:"organic oats, organic coconut oil, organic honey, organic pumpkin seeds, organic cinnamon, sea salt" }
+    ]},
+    { title: "Juice Shots", items: [
+      { id:"immunity-juice-shots", name:"Immunity Juice Shots", price:10, sizeNote:"16oz · 8 servings",
+        desc:"A bright, zippy blend built to wake you up and keep you going — coconut water with orange, lemon, ginger, turmeric, and black pepper, rounded out with a touch of raw honey.",
+        ingredientsOverride:"coconut water, orange, lemon, ginger, turmeric, black pepper, raw honey" }
     ]},
     { title: "Custom", items: [
       { id:"custom", name:"Custom Order", priceLabel:"$10–16", isCustom:true,
@@ -924,10 +932,10 @@
     price.className = "price";
     price.textContent = item.isCustom ? item.priceLabel : money(item.price);
     priceWrap.appendChild(price);
-    if (item.isCustom){
+    if (item.isCustom || item.sizeNote){
       var note = document.createElement("span");
       note.className = "price-note";
-      note.textContent = "quoted when confirmed";
+      note.textContent = item.isCustom ? "quoted when confirmed" : item.sizeNote;
       priceWrap.appendChild(note);
     }
 
